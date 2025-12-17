@@ -242,3 +242,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Copyright Year
     document.getElementById('current-year').textContent = new Date().getFullYear();
 });
+
+            
