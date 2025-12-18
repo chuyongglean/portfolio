@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Typing Effect
     const textElement = document.querySelector('.typing-text');
     if (textElement) {
-        const words = ['Time', 'Quality', 'Scale', 'Dream'];
+        const words = ['Solutions', 'Quality', 'Scale', 'Innovate'];
         let wordIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
@@ -242,5 +242,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // Copyright Year
     document.getElementById('current-year').textContent = new Date().getFullYear();
 });
-
-            
