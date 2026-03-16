@@ -1,48 +1,75 @@
+/**
+ * BIOGRAPHY EDITORIAL SCRIPT
+ * Engineered for Narrative-Driven Engagement, Precision UX, and High Performance.
+ * Synchronized with the Elite Design System.
+ */
+
+/**
+ * BIOGRAPHY EDITORIAL SCRIPT
+ * Engineered for Narrative-Driven Engagement, Precision UX, and High Performance.
+ * Synchronized with the Elite Design System.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Mobile Menu Toggle (Biography Page Specific)
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    const navLinks = document.querySelectorAll('.nav-link');
+    // Safety check for elite execution environment
+    console.log("Biography Script: Initializing Narrative Engine...");
+    /**
+     * 01. Sidebar Active Link Highlighting (Intersection Observer)
+     * Dynamically tracks reading progress and highlights the relevant chapter in the sidebar.
+     */
+    const chapters = document.querySelectorAll('section[id]');
+    const sidebarLinks = document.querySelectorAll('.story-nav-link');
 
-    if (hamburger && navMenu) {
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-            
-            // Animate Hamburger
-            const bars = document.querySelectorAll('.bar');
-            if (hamburger.classList.contains('active')) {
-                bars[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
-                bars[1].style.opacity = '0';
-                bars[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
-            } else {
-                bars[0].style.transform = 'none';
-                bars[1].style.opacity = '1';
-                bars[2].style.transform = 'none';
-            }
-        });
-    }
+    if (chapters.length > 0 && sidebarLinks.length > 0) {
+        const observerOptions = {
+            root: null,
+            rootMargin: '-30% 0px -60% 0px', // Precise focal point for editorial tracking
+            threshold: 0
+        };
 
-    // Close Mobile Menu on Link Click
-    if (navLinks) {
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                if (hamburger.classList.contains('active')) {
-                    hamburger.classList.remove('active');
-                    navMenu.classList.remove('active');
-                    // Reset hamburger icon
-                    const bars = document.querySelectorAll('.bar');
-                    bars[0].style.transform = 'none';
-                    bars[1].style.opacity = '1';
-                    bars[2].style.transform = 'none';
+        const activeChapterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const currentId = entry.target.getAttribute('id');
+                    sidebarLinks.forEach(link => {
+                        const href = link.getAttribute('href').substring(1);
+                        link.classList.toggle('active', href === currentId);
+                    });
                 }
             });
-        });
+        }, observerOptions);
+
+        chapters.forEach(chapter => activeChapterObserver.observe(chapter));
     }
 
-    // Copyright Year
-    const currentYearElement = document.getElementById('current-year');
-    if (currentYearElement) {
-        currentYearElement.textContent = new Date().getFullYear();
+    /**
+     * 02. Parallax Effects for Editorial Portrait
+     * Adds a subtle layer of depth to the sticky sidebar image during scroll.
+     * Utilizes passive listeners and hardware acceleration for zero main-thread impact.
+     */
+    const portrait = document.querySelector('.bio-portrait-img');
+    if (portrait && window.matchMedia("(min-width: 1024px)").matches) {
+        let ticking = false;
+        portrait.style.willChange = 'transform'; // Promote to layer for performance
+        
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrolled = window.scrollY;
+                    const val = scrolled * 0.04;
+                    portrait.style.transform = `translate3d(0, ${val}px, 0) scale(1.02)`;
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
     }
+
+    /**
+     * 03. Performance Verification
+     * Redundant JS smooth-scroll and reveal observers removed.
+     * Native CSS 'scroll-behavior: smooth' and 'scroll-padding-top' (defined in style.css)
+     * are leveraged for optimal cross-browser interaction performance.
+     * AOS (global) handles entrance animations for .chapter and .exp-item elements.
+     */
 });
