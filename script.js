@@ -1,244 +1,188 @@
+/**
+ * CORE ELITE SCRIPT
+ * Engineered for Performance, Precision, and Sophistication.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize AOS (Animate On Scroll)
+    /**
+     * 01. AOS Initialization
+     */
     AOS.init({
-        duration: 800,
-        easing: 'ease-out-cubic',
+        duration: 1000,
+        easing: 'ease-out-expo',
         once: true,
-        offset: 50
+        offset: 80,
+        delay: 50
     });
 
-    // Sticky Header Blur Effect
+    /**
+     * 02. Header Scroll Controller
+     */
     const header = document.querySelector('.header');
-    const handleScroll = () => {
-        if (window.scrollY > 20) {
+    const updateHeaderState = () => {
+        if (window.scrollY > 40) {
             header.classList.add('scrolled');
-            header.style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.05)';
         } else {
             header.classList.remove('scrolled');
-            header.style.boxShadow = 'none';
         }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', updateHeaderState, { passive: true });
+    updateHeaderState();
 
-    // Mobile Menu Toggle
+    /**
+     * 03. High-Performance Intersection Observers
+     */
+    
+    // Active Link Highlighting
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section[id]');
+    
+    const activeObserverOptions = {
+        root: null,
+        rootMargin: '-40% 0px -50% 0px',
+        threshold: 0
+    };
+
+    const activeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href').includes(id));
+                });
+            }
+        });
+    }, activeObserverOptions);
+
+    sections.forEach(section => activeObserver.observe(section));
+
+    // Custom Scroll Reveal Animations (Elite Minimalist Triggers)
+    // Updated to include the flagship showcase 'feature-card' elements for rhythmic staggered entry.
+    const revealElements = document.querySelectorAll('.expertise-item, .showcase-visual, .showcase-content, .feature-card, .skill-tier, .testimonial-card, .contact-info, .contact-form-container');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.classList.add('revealed');
+                }, index * 100);
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    /**
+     * 04. Mobile Navigation Logic
+     */
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
-    const navLinks = document.querySelectorAll('.nav-link');
+    const body = document.body;
 
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        
-        // Animate Hamburger
-        const bars = document.querySelectorAll('.bar');
-        if (hamburger.classList.contains('active')) {
-            bars[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
-            bars[1].style.opacity = '0';
-            bars[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
-        } else {
-            bars[0].style.transform = 'none';
-            bars[1].style.opacity = '1';
-            bars[2].style.transform = 'none';
-        }
-    });
-
-    // Close Mobile Menu on Link Click
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-            // Reset hamburger icon
-            const bars = document.querySelectorAll('.bar');
-            bars[0].style.transform = 'none';
-            bars[1].style.opacity = '1';
-            bars[2].style.transform = 'none';
-        });
-    });
-
-    // Active Link Highlight on Scroll
-    const sections = document.querySelectorAll('section');
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            if (pageYOffset >= sectionTop - 200) {
-                current = section.getAttribute('id');
-            }
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            const isOpen = hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            body.style.overflow = isOpen ? 'hidden' : 'auto';
         });
 
+        // Close on Link Click
         navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href').includes(current)) {
-                link.classList.add('active');
-            }
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                body.style.overflow = 'auto';
+            });
         });
-    });
+    }
 
-    // Custom Cursor (Desktop Only)
+    /**
+     * 05. Premium Custom Cursor
+     */
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorOutline = document.querySelector('.cursor-outline');
 
-    if (window.matchMedia("(min-width: 1024px)").matches) {
+    if (window.matchMedia("(min-width: 1024px)").matches && cursorDot && cursorOutline) {
         window.addEventListener('mousemove', (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
+            const { clientX: x, clientY: y } = e;
 
-            // Dot follows instantly
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
+            cursorDot.style.left = `${x}px`;
+            cursorDot.style.top = `${y}px`;
 
-            // Outline follows with delay (using CSS transition or simple animation)
             cursorOutline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 500, fill: "forwards" });
+                left: `${x}px`,
+                top: `${y}px`
+            }, { duration: 600, fill: "forwards", easing: "ease-out" });
         });
 
-        // Hover effects for cursor
-        document.querySelectorAll('a, button, .service-card, .portfolio-item').forEach(el => {
+        const interactiveElements = 'a, button, .expertise-item, .showcase-visual, .feature-card, .tier-tags span, .link-premium';
+        document.querySelectorAll(interactiveElements).forEach(el => {
             el.addEventListener('mouseenter', () => {
-                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                cursorOutline.style.backgroundColor = 'rgba(79, 70, 229, 0.1)';
-                cursorDot.style.transform = 'translate(-50%, -50%) scale(0.5)';
+                cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.6)';
+                cursorOutline.style.borderColor = 'var(--accent-blue)';
+                cursorOutline.style.background = 'rgba(0, 122, 255, 0.05)';
+                cursorDot.style.background = 'var(--accent-blue)';
             });
             el.addEventListener('mouseleave', () => {
                 cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
-                cursorOutline.style.backgroundColor = 'transparent';
-                cursorDot.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursorOutline.style.borderColor = 'rgba(0, 0, 0, 0.2)';
+                cursorOutline.style.background = 'transparent';
+                cursorDot.style.background = 'var(--black)';
             });
         });
     }
 
-    // Typing Effect
-    const textElement = document.querySelector('.typing-text');
-    if (textElement) {
-        const words = ['Solutions', 'Quality', 'Scale', 'Innovate'];
-        let wordIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-
-        const type = () => {
-            const currentWord = words[wordIndex];
-            if (isDeleting) {
-                textElement.textContent = currentWord.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                textElement.textContent = currentWord.substring(0, charIndex + 1);
-                charIndex++;
-            }
-
-            if (!isDeleting && charIndex === currentWord.length) {
-                isDeleting = true;
-                setTimeout(type, 2000); // Pause at end
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                wordIndex = (wordIndex + 1) % words.length;
-                setTimeout(type, 500);
-            } else {
-                setTimeout(type, isDeleting ? 100 : 200);
-            }
-        };
-        type();
-    }
-
-    // Number Counter Animation
-    const statsSection = document.querySelector('.about-stats-grid');
-    let hasAnimated = false;
-
-    if (statsSection) {
-        const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting && !hasAnimated) {
-                const counters = document.querySelectorAll('.stat-number');
-                counters.forEach(counter => {
-                    const target = +counter.getAttribute('data-target');
-                    const suffix = counter.innerText.replace(/[0-9]/g, '');
-                    const duration = 2000;
-                    const increment = target / (duration / 16);
-                    
-                    let current = 0;
-                    const updateCounter = () => {
-                        current += increment;
-                        if (current < target) {
-                            counter.innerText = Math.ceil(current) + suffix;
-                            requestAnimationFrame(updateCounter);
-                        } else {
-                            counter.innerText = target + suffix;
-                        }
-                    };
-                    updateCounter();
-                });
-                hasAnimated = true;
-            }
-        }, { threshold: 0.5 });
-        observer.observe(statsSection);
-    }
-
-    // Form Handling
-    const form = document.getElementById('contactForm');
-    if (form) {
-        const formStatus = document.getElementById('form-status');
-        const allInputs = form.querySelectorAll('input, textarea');
-
-        const validateEmail = (email) => /^\S+@\S+\.\S+$/.test(email);
-
-        form.addEventListener('submit', (e) => {
+    /**
+     * 06. Form Interaction & Validation
+     */
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        const status = document.getElementById('form-status');
+        
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            formStatus.textContent = '';
-            formStatus.className = '';
-            allInputs.forEach(input => input.classList.remove('invalid'));
-
-            const name = form.querySelector('#name').value.trim();
-            const email = form.querySelector('#email').value.trim();
-            const subject = form.querySelector('#subject').value.trim();
-            const message = form.querySelector('#message').value.trim();
-
-            let errors = [];
-            if (!name) {
-                errors.push('Full Name is required.');
-                form.querySelector('#name').classList.add('invalid');
-            }
-            if (!email) {
-                errors.push('Email is required.');
-                form.querySelector('#email').classList.add('invalid');
-            } else if (!validateEmail(email)) {
-                errors.push('Email is invalid.');
-                form.querySelector('#email').classList.add('invalid');
-            }
-            if (!subject) {
-                errors.push('Subject is required.');
-                form.querySelector('#subject').classList.add('invalid');
-            }
-            if (!message) {
-                errors.push('Message is required.');
-                form.querySelector('#message').classList.add('invalid');
-            }
-
-            if (errors.length > 0) {
-                formStatus.textContent = errors.join(' ');
-                formStatus.classList.add('error');
-                return;
-            }
             
-            const recipientEmail = 'chuyongglean@gmail.com';
-            const mailtoSubject = encodeURIComponent(subject);
-            const mailtoBody = encodeURIComponent(
-                `Name: ${name}\nFrom: ${email}\n\nMessage:\n${message}`
-            );
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
             
-            window.location.href = `mailto:${recipientEmail}?subject=${mailtoSubject}&body=${mailtoBody}`;
+            // Premium Feedback Loop
+            const submitBtn = contactForm.querySelector('.submit-btn');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sending...';
 
-            formStatus.textContent = 'Opening your email client to send the message...';
-            formStatus.classList.add('success');
-            
-            setTimeout(() => {
-                form.reset();
-                formStatus.textContent = '';
-                formStatus.className = '';
-            }, 5000);
+            try {
+                // Simulation of professional processing
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                const recipient = 'chuyongglean@gmail.com';
+                const mailto = `mailto:${recipient}?subject=${encodeURIComponent(data.subject)}&body=${encodeURIComponent("Name: " + data.name + "\n\n" + data.message)}`;
+                
+                window.location.href = mailto;
+
+                status.textContent = "Preparing your email client...";
+                status.className = "success";
+                status.style.display = "block";
+                
+                contactForm.reset();
+            } catch (err) {
+                status.textContent = "Execution failed. Please try again.";
+                status.className = "error";
+                status.style.display = "block";
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+                setTimeout(() => status.style.display = "none", 5000);
+            }
         });
     }
 
-    // Copyright Year
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+    /**
+     * 07. Utilities
+     */
+    const yearEl = document.getElementById('current-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // Smooth internal scrolling logic removed to restore natural scrolling behavior.
+    // Sticky header offset is now managed natively via CSS scroll-padding-top.
 });
